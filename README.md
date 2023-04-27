@@ -9,7 +9,7 @@ Funções disponiveis:
 
 Projeto criado com modelo em Camadas:
 * Visão
-* Modelos
+* Controle
 * Persistencia
 
 Segundo periodo de ADS - Professor - Eugenio
