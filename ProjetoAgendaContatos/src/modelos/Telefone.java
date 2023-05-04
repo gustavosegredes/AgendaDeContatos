@@ -10,50 +10,58 @@ package visao;
  */
 public class Telefone {
     // atributos
-    private int ddi = 0 ;
-    private int ddd = 0;
-    private int numero= 0;
+    private String ddi = "" ;
+    private String ddd = "";
+    private String numeroTelefone= "";
     
     //Metodos
     public Telefone(){
-        this.ddi = 0;
-        this.ddd = 0;
-        this.numero = 0;
+        this.ddi = "";
+        this.ddd = "";
+        this.numeroTelefone = "";
     }
 
-    public Telefone(int ddi, int ddd, int numero) {
+    public Telefone(String ddi, String ddd, String numeroTelefone)throws Exception{
+        if ( ddi.equals("")) throw  new Exception("DDI Invalido");
         this.ddi = ddi;
+        if ( ddd.equals("")) throw  new Exception("DDD Invalido");
         this.ddd = ddd;
-        this.numero = numero;
+        if ( numeroTelefone.equals("")) throw new Exception("Campo Numero de telefone esta vazio!!");
+        if ( numeroTelefone.length() <= 8  ) throw new Exception("Campo Numero de telefone esta incorrreto!! < 8 ");
+        this.numeroTelefone = numeroTelefone;
     }
 
-    public int getDdi() {
+    public String getDdi() {
         return ddi;
     }
 
-    public void setDdi(int ddi) {
+    public void setDdi(String ddi) throws Exception{
+        if ( ddi.equals("")) throw  new Exception("DDI Invalido");
         this.ddi = ddi;
     }
 
-    public int getDdd() {
+    public String getDdd() {
         return ddd;
     }
 
-    public void setDdd(int ddd) {
+    public void setDdd(String ddd)throws Exception{
+        if ( ddd.equals("")) throw  new Exception("DDD Invalido");
         this.ddd = ddd;
     }
 
-    public int getNumero() {
-        return numero;
+    public String getNumero() {
+        return numeroTelefone;
     }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
+    public void setNumero(String numeroTelefone)throws Exception{
+        if ( numeroTelefone.equals("")) throw new Exception("Campo Numero de telefone esta vazio!!");
+        if ( numeroTelefone.length() <= 8  ) throw new Exception("Campo Numero de telefone esta incorrreto!! < 8 ");
+        this.numeroTelefone = numeroTelefone;
     }
 
     @Override
     public String toString() {
-        return  ddi + ";" + ddd + ";" + numero;
+        return  ddi + ";" + ddd + ";" + numeroTelefone;
     }
     
 }

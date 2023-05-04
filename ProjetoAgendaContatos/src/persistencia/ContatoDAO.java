@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import modelos.IContatoCRUD;
 import modelos.Contato;
+import visao.Telefone;
 
 /**
  *
@@ -46,12 +47,14 @@ public class ContatoDAO implements IContatoCRUD {
       FileReader fr = new FileReader(nomeDoArquivoNoDisco);
       BufferedReader br  = new BufferedReader(fr);
       String linha = "";
+      
       while((linha=br.readLine())!=null){
         String vetorStr[] = linha.split(";");
         String cpfAux = vetorStr[0];
         String nomeCompleto = vetorStr[1];
         String email = vetorStr[2];
-        Contato objetoContato = new Contato(cpfAux,nomeCompleto,email);
+        Telefone telefone = new Telefone(vetorStr[3], vetorStr[4], vetorStr[5]);
+        Contato objetoContato = new Contato(cpfAux,nomeCompleto,email,telefone);
         if(cpf.equals(cpfAux)){
           br.close();
           return objetoContato;
@@ -70,6 +73,7 @@ public class ContatoDAO implements IContatoCRUD {
         ArrayList<Contato> agenda = new ArrayList();
         try {
             Contato contato;
+            Telefone telefone;
             FileReader fr = new FileReader(nomeDoArquivoNoDisco);
             BufferedReader br  = new BufferedReader(fr);
             String linha = "";
@@ -78,8 +82,13 @@ public class ContatoDAO implements IContatoCRUD {
                 String cpf = vetorStr[0];
                 String nomeCompleto = vetorStr[1];
                 String email = vetorStr[2];
-                contato = new Contato(cpf,nomeCompleto, email);
+//                System.out.println(vetorStr[3]);
+//                System.out.println(vetorStr[4]);
+//                System.out.println(vetorStr[5]);
+                telefone = new Telefone(vetorStr[3], vetorStr[4], vetorStr[5]);
+                contato = new Contato(cpf,nomeCompleto, email,telefone);
                 agenda.add(contato);
+                //System.out.println(contato.toString());
             }
             return agenda;
         } catch(Exception erro) {
@@ -91,29 +100,65 @@ public class ContatoDAO implements IContatoCRUD {
 
     @Override
     public boolean excluir(String cpf) throws Exception {
-        boolean r = false;
-        ArrayList<Contato> auxAgenda = new ArrayList<>();
-        auxAgenda = listagemDeContatos();
-        Contato contato;
-        ArrayList<Contato> auxAgendaAtual = new ArrayList<>();
-        
-        for(Contato i : auxAgenda){
-            if(!i.getCpf().equals(cpf)){
-                auxAgendaAtual.add(i );
-             }else{
-                r = true;
+        try {
+            boolean r = false;
+            ArrayList<Contato> auxAgenda = new ArrayList<>();
+            auxAgenda = listagemDeContatos();
+            //Contato contato;
+            ArrayList<Contato> auxAgendaAtual = new ArrayList<>();
+
+            for(Contato i : auxAgenda){
+                if(!i.getCpf().equals(cpf)){
+                    auxAgendaAtual.add(i );
+                 }else{
+                    r = true;
+                }
             }
+            FileWriter fw = new FileWriter(nomeDoArquivoNoDisco);
+            BufferedWriter bw = new BufferedWriter(fw);
+            System.out.println(auxAgenda);
+            System.out.println(auxAgendaAtual);
+            for(Contato i : auxAgendaAtual){
+                bw.write(i.toString() + "\n");
+            }
+            bw.close();
+            return r;           
+        } catch (Exception erro) {
+            String msg = "Metodo Excluir/contatoDAO - " +erro.getMessage();
+            throw new Exception(msg);
         }
-        FileWriter fw = new FileWriter(nomeDoArquivoNoDisco);
-        BufferedWriter bw = new BufferedWriter(fw);
-        System.out.println(auxAgenda);
-        System.out.println(auxAgendaAtual);
-        for(Contato i : auxAgendaAtual){
-            bw.write(i.toString() + "\n");
+    }
+    @Override
+    public void alterar(Contato objContato) throws Exception {
+        try {
+            ArrayList<Contato> agenda = listagemDeContatos();
+            for(Contato i : agenda){
+                if(i.getCpf().equals(objContato.getCpf())){
+                   i.setNomeCompleto(objContato.getNomeCompleto());
+                   i.setEmail(objContato.getEmail());
+                   System.out.println(objContato.getDdi());
+                   i.setDdi(objContato.getDdi());
+                   i.setDdd(objContato.getDdd());
+                   i.setNumero(objContato.getNumero());
+                 }
+            }
+           FileWriter fw = new FileWriter(nomeDoArquivoNoDisco);
+           BufferedWriter bw = new BufferedWriter(fw);
+           //System.out.println(agenda);
+           
+           for(Contato i : agenda){
+               bw.write(i.toString() + "\n");
+           }
+
+           bw.close();
+
+            //System.out.println(agenda.indexOf(objContato));
+            
+            
+        } catch (Exception erro) {
+            String msg = "Metodo ALTERAR/contatoDAO - " +erro.getMessage();
+            throw new Exception(msg);
         }
-       
-        bw.close();
-        return r;           
-       }
+    }
 }
    
